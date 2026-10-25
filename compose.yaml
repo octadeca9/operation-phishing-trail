@@ -9,7 +9,9 @@ services:
     restart: unless-stopped
     init: true
     environment:
-      APP_ENV: ${APP_ENV:-production}
+      # Default lokal = development + mock (lab langsung jalan).
+      # Produksi memakai deploy/compose/compose.prod.yaml (production + platform).
+      APP_ENV: ${APP_ENV:-development}
       PORT: "8080"
       CHALLENGE_DIR: /opt/challenge
       CHALLENGE_ID: operation-phishing-trail
