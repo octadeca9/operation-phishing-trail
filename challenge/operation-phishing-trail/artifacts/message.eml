@@ -1,0 +1,59 @@
+Return-Path: <bounce@mail-verify.example>
+Delivered-To: analyst1@nusantara-dynamics.example
+Received: from mx-edge01.nusantara-dynamics.example (mx-edge01.nusantara-dynamics.example [203.0.113.10])
+    by inbound.nusantara-dynamics.example with ESMTPS id 4af13c9d
+    for <analyst1@nusantara-dynamics.example>; Mon, 20 Oct 2025 08:14:22 +0700 (WIB)
+Received: from vps-edge.example-payroll.review (vps-edge.example-payroll.review [198.51.100.77])
+    by mx-edge01.nusantara-dynamics.example with ESMTP id 2b77ac11
+    for <analyst1@nusantara-dynamics.example>; Mon, 20 Oct 2025 08:14:19 +0700 (WIB)
+Authentication-Results: mx-edge01.nusantara-dynamics.example;
+    spf=fail (sender IP is 198.51.100.77) smtp.mailfrom=mail-verify.example;
+    dkim=none (no signature aligned with From domain);
+    dmarc=fail (p=reject) header.from=nusantara-dynamics-hr.example
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mail-verify.example;
+    s=sel1; h=from:subject:date:to;
+    bh=2jmj7l5rSw0yVb/vlWAYkK/YBwk=;
+    b=INVALID_SIGNATURE_FOR_LAB_DO_NOT_TRUST==
+Date: Mon, 20 Oct 2025 08:14:18 +0700
+From: "HR Payroll Department" <payroll@nusantara-dynamics-hr.example>
+Reply-To: "Payroll Support" <hr-support@mail-verify.example>
+To: <analyst1@nusantara-dynamics.example>
+Subject: [TINDAKAN DIPERLUKAN] Verifikasi Slip Gaji Oktober Anda Sebelum 24 Jam
+Message-ID: <PR-8842.20251020@example-payroll.review>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="=_lab_boundary_8842"
+
+--=_lab_boundary_8842
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Yth. Karyawan Nusantara Dynamics,
+
+Sistem penggajian kami mendeteksi bahwa slip gaji Oktober Anda BELUM
+terverifikasi. Jika Anda tidak memverifikasi dalam waktu 24 JAM, pencairan
+gaji bulan ini akan DITANGGUHKAN dan akun payroll Anda akan DINONAKTIFKAN.
+
+Untuk menghindari penundaan, segera verifikasi identitas dan tinjau dokumen
+penggajian Anda melalui portal aman berikut:
+
+    account-verify.nusantara-dynamics-hr.example-payroll.review/secure/login?ref=PR-8842
+
+Lampiran "Payroll_Statement_October.pdf" berisi rincian yang harus Anda
+konfirmasi. Mohon buka lampiran dan ikuti instruksi di dalamnya.
+
+Ini adalah permintaan resmi dari Departemen HR Payroll. Jangan abaikan email
+ini.
+
+Hormat kami,
+Tim HR Payroll
+Nusantara Dynamics
+
+--=_lab_boundary_8842
+Content-Type: application/octet-stream; name="Payroll_Statement_October.pdf"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="Payroll_Statement_October.pdf"
+
+TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQABAU0FNUExFX0lORVJUX0xBQl9BUlRJRkFDVF9O
+T1RfQV9SRUFMX0VYRUNVVEFCTEVfRE9fTk9UX1JVTg==
+
+--=_lab_boundary_8842--

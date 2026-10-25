@@ -1,0 +1,34 @@
+# Secrets & env
+.env
+.env.*
+!.env.example
+
+# Dokumen internal / privat — JANGAN di-push ke GitHub
+PRD_Operation_Phishing_Trail.md
+BLUEPRINT_Operation_Phishing_Trail.md
+WRITEUP.md
+
+# Konfigurasi lokal Claude Code
+.claude/
+CLAUDE.local.md
+
+# Node
+node_modules/
+app/node_modules/
+dist/
+app/dist/
+coverage/
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# CATATAN: challenge/operation-phishing-trail/private/answers.yaml berisi
+# rubric & flag. Pada repo TRAINING PRIVAT ini file tsb sengaja di-commit agar
+# lab berjalan out-of-the-box dan dibaca backend saja (tidak pernah dikirim ke
+# client). Jika repo dipublikasikan, pindahkan ke secret manager/env dan
+# tambahkan baris berikut:
+# challenge/operation-phishing-trail/private/

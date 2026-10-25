@@ -1,0 +1,9 @@
+node_modules
+dist
+tests
+*.log
+.env
+.env.*
+npm-debug.log*
+coverage
+.vitest

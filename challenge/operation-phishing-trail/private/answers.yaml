@@ -1,0 +1,70 @@
+# =============================================================================
+# RAHASIA — SERVER-SIDE ONLY. JANGAN kirim file ini ke browser/bundle client.
+# Berisi rubric jawaban benar, flag final, dan teks hint bertingkat.
+#
+# Di repository publik: pindahkan konten ini ke secret manager / env dan
+# jangan commit. Di repo privat training ini, file dibaca backend saja dan
+# TIDAK PERNAH dikembalikan melalui API.
+# =============================================================================
+challenge_id: operation-phishing-trail
+version: 1
+
+# Flag final diberikan hanya setelah seluruh checkpoint tervalidasi.
+final_flag: "RL{payroll_phish_trail_escalated}"
+
+checkpoints:
+  C1:
+    type: structured
+    expected:
+      sender_address: "payroll@nusantara-dynamics-hr.example"
+      sender_domain: "nusantara-dynamics-hr.example"
+    # normalisasi: trim + lowercase
+    normalize:
+      lowercase: true
+      trim: true
+    hints:
+      - "Konsep: identitas pengirim punya beberapa lapisan. Bandingkan apa yang ditampilkan dengan apa yang sebenarnya dipakai mesin."
+      - "Teknis: lihat header From, Reply-To, dan Authentication-Results pada message.eml serta ringkasan di header-analysis.txt."
+      - "Terarah: alamat pengirim ada di dalam tanda kurung sudut pada header From. Domain adalah bagian setelah tanda @ pada alamat tersebut — bukan nama organisasi yang diklaim di body."
+
+  C2:
+    type: exact_match
+    expected: "hxxps://account-verify[.]nusantara-dynamics-hr[.]example-payroll[.]review/secure/login?ref=PR-8842"
+    normalize:
+      lowercase: true
+      trim: true
+    hints:
+      - "Konsep: email ini mengarahkan penerima ke satu tujuan utama. Fokus pada tautan 'tinjau dokumen' / 'verifikasi'."
+      - "Teknis: url-evidence.txt memuat URL yang sudah di-defang beserta konteksnya. Salin PERSIS seperti tertera (termasuk query string)."
+      - "Terarah: formatnya diawali 'hxxps://' dan memakai '[.]' menggantikan titik. Sertakan path /secure/login dan parameter ?ref=PR-8842."
+
+  C3:
+    type: multi_select
+    policy: exact_set
+    expected:
+      - display_name_mismatch
+      - sender_domain_mismatch
+      - reply_to_mismatch
+      - url_lookalike_domain
+      - auth_spf_dmarc_fail
+      - urgency_pressure
+    hints:
+      - "Konsep: red flag harus didukung bukti di artefak, bukan asumsi. Waspadai opsi yang terdengar meyakinkan tapi tidak ada buktinya."
+      - "Teknis: silang-cek header-analysis.txt (From vs Reply-To vs org), url-evidence.txt (domain lookalike), dan mail-gateway-events.json (SPF/DKIM/DMARC)."
+      - "Terarah: HTTPS bukan jaminan aman; DKIM di sini TIDAK valid/aligned; tidak ada bukti IP internal tepercaya. Jangan pilih ketiga opsi tersebut."
+
+  C4:
+    type: single_select
+    expected: "mismatch_executable"
+    hints:
+      - "Konsep: ekstensi dan ikon file bisa berbohong. Yang jujur adalah byte signature awal file (magic number)."
+      - "Teknis: di attachment-metadata.json bandingkan field declared_mime_type dengan observed_file_signature dan observed_file_type."
+      - "Terarah: signature '4D 5A' (ASCII 'MZ') adalah penanda executable Windows (PE), bukan dokumen PDF yang seharusnya diawali '%PDF'."
+
+  C5:
+    type: single_select
+    expected: "phishing_escalate"
+    hints:
+      - "Konsep: respons yang benar tidak pernah menambah risiko. Tindakan apa pun yang melibatkan mengklik/membuka justru berbahaya."
+      - "Teknis: gabungkan temuan C1–C4 — sender & reply-to mismatch, auth gagal, URL lookalike, dan lampiran executable menyamar sebagai PDF."
+      - "Terarah: klasifikasikan sebagai phishing, jangan interaksi dengan tautan/lampiran, laporkan dan eskalasi ke SOC, lalu blokir pengirim."

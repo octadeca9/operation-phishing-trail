@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Typecheck (lint)
+        run: npm run typecheck
+
+      - name: Unit & integration tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+  fixtures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validasi tidak ada flag/secret di fixture publik
+        run: |
+          set -e
+          # Flag final tidak boleh bocor ke manifest publik atau artefak.
+          if grep -RInE 'RL\{' challenge/operation-phishing-trail/manifest.yaml challenge/operation-phishing-trail/artifacts; then
+            echo "::error::Flag final ditemukan di konten publik"; exit 1
+          fi
+          # Pastikan URL di artefak sudah di-defang (tidak ada http(s) aktif).
+          if grep -RInE 'https?://' challenge/operation-phishing-trail/artifacts; then
+            echo "::error::URL aktif (http/https) ditemukan di artefak — harus defanged"; exit 1
+          fi
+          echo "Fixture OK: tidak ada flag bocor & URL sudah defanged."
+
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Compose
+        run: docker compose config --quiet
+      - name: Build application image
+        run: docker compose build phishing-trail
+      - name: Container smoke test (health)
+        run: |
+          set -e
+          docker run -d --name pt_test -p 18080:8080 \
+            -e APP_ENV=development -e AUTH_MODE=mock \
+            -e CHALLENGE_DIR=/opt/challenge \
+            -v "$PWD/challenge:/opt/challenge:ro" \
+            operation-phishing-trail:local
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:18080/healthz; then ok=1; break; fi
+            sleep 2
+          done
+          docker logs pt_test || true
+          docker rm -f pt_test
+          test "${ok:-0}" = "1"

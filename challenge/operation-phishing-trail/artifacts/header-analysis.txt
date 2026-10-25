@@ -1,0 +1,39 @@
+=============================================================================
+RINGKASAN ANALISIS HEADER — message.eml
+Disiapkan oleh: Mail Security Gateway (lab synthetic)  |  Semua data FIKTIF
+=============================================================================
+
+Organisasi penerima (diklaim di body) : Nusantara Dynamics
+Domain resmi organisasi               : nusantara-dynamics.example
+
+-- Identitas pengirim ------------------------------------------------------
+Display name (From)        : "HR Payroll Department"
+Alamat pengirim (From)     : payroll@nusantara-dynamics-hr.example
+Domain pengirim            : nusantara-dynamics-hr.example
+Reply-To                   : hr-support@mail-verify.example
+Return-Path (envelope from): bounce@mail-verify.example
+
+Catatan: domain pengirim (nusantara-dynamics-hr.example) BUKAN domain resmi
+organisasi (nusantara-dynamics.example). Reply-To dan Return-Path mengarah ke
+domain ketiga yang berbeda lagi (mail-verify.example).
+
+-- Jalur pengiriman (Received, dibaca bawah ke atas) -----------------------
+1) vps-edge.example-payroll.review [198.51.100.77]   <- asal sebenarnya
+2) mx-edge01.nusantara-dynamics.example [203.0.113.10]
+
+Catatan: hop pertama berasal dari infrastruktur example-payroll.review,
+bukan dari mail server organisasi.
+
+-- Hasil autentikasi (Authentication-Results) -----------------------------
+SPF   : fail   (IP pengirim 198.51.100.77 tidak diizinkan oleh mail-verify.example)
+DKIM  : none   (tidak ada signature yang selaras dengan domain From)
+DMARC : fail   (p=reject; header.from=nusantara-dynamics-hr.example)
+
+-- Sinyal isi pesan --------------------------------------------------------
+- Subjek & body menekankan URGENSI dan ANCAMAN ("24 JAM", "DITANGGUHKAN",
+  "DINONAKTIFKAN").
+- Mengarahkan ke satu URL eksternal untuk "verifikasi".
+- Meminta membuka lampiran dan mengikuti instruksi.
+
+CATATAN PENTING: tidak satu pun sinyal di atas boleh dijadikan bukti TUNGGAL.
+Simpulkan dari gabungan bukti yang konsisten.

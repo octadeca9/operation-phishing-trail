@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Operation: Phishing Trail — Hack RedLimit</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo">◆</span>
+        <span>Hack RedLimit · <strong>Operation: Phishing Trail</strong></span>
+      </div>
+      <div class="score" id="scoreBox" hidden>
+        Skor: <strong id="scoreVal">0</strong> / <span id="maxScoreVal">800</span>
+        <span class="status-pill" id="statusPill">active</span>
+      </div>
+    </header>
+
+    <main id="app">
+      <!-- Landing -->
+      <section id="intro" class="card">
+        <h1 id="introTitle">Operation: Phishing Trail</h1>
+        <p class="muted" id="introMeta"></p>
+        <p id="introDesc"></p>
+        <div class="rules">
+          <h3>Aturan</h3>
+          <ul>
+            <li>Lab ini aman: tidak ada email dikirim, tidak ada tautan aktif, tidak ada payload.</li>
+            <li>Semua domain, nama, URL, dan data bersifat <strong>fiktif khusus lab</strong>.</li>
+            <li>Jawaban dinilai di server. Jawaban salah tidak membocorkan solusi.</li>
+            <li>Hint tersedia bertingkat dan dapat mengurangi poin checkpoint.</li>
+          </ul>
+        </div>
+        <button class="btn primary" id="startBtn">Mulai Lab</button>
+        <p class="error" id="introError"></p>
+      </section>
+
+      <!-- Lab -->
+      <section id="lab" hidden>
+        <div class="grid">
+          <div class="col artifacts">
+            <h2>Artefak Bukti</h2>
+            <div class="tabs" id="artifactTabs"></div>
+            <pre class="viewer" id="artifactViewer" aria-live="polite">Pilih artefak untuk ditampilkan…</pre>
+            <p class="muted small">Artefak dirender sebagai teks biasa (inert). Teks dapat dipilih & disalin.</p>
+          </div>
+
+          <div class="col checkpoints">
+            <div class="lab-actions">
+              <h2>Checkpoint</h2>
+              <button class="btn ghost" id="resetBtn" title="Reset sesi ini saja">Reset Sesi</button>
+            </div>
+            <div id="checkpointList"></div>
+
+            <div id="completionBox" class="completion" hidden>
+              <h3>✅ Challenge selesai!</h3>
+              <p>Skor akhir: <strong id="finalScore"></strong></p>
+              <button class="btn primary" id="walkthroughBtn">Lihat Walkthrough</button>
+              <pre class="viewer" id="walkthroughViewer" hidden></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot muted small">
+      Lab latihan defensif · Analisis email sintetis · Tidak untuk aktivitas ofensif nyata.
+    </footer>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+# Override produksi untuk Operation: Phishing Trail.
+# Dipakai bersama compose.yaml:
+#   docker compose -f compose.yaml -f deploy/compose/compose.prod.yaml up -d
+#
+# Deploy & rollback dengan memilih tag image dari registry (image imutable).
+# Rollback = set IMAGE_TAG ke tag lama lalu `up -d` kembali.
+#   IMAGE=registry.example/operation-phishing-trail IMAGE_TAG=1.0.0 \
+#     docker compose -f compose.yaml -f deploy/compose/compose.prod.yaml up -d
+
+services:
+  phishing-trail:
+    # Pakai image hasil CI dari registry; JANGAN build ulang di production.
+    image: "${IMAGE:-registry.example/operation-phishing-trail}:${IMAGE_TAG:-latest}"
+    build: !reset null
+    pull_policy: always
+    environment:
+      APP_ENV: production
+      AUTH_MODE: platform
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    # Port tetap hanya loopback; reverse proxy adalah entry point publik.
+    ports: !override
+      - "127.0.0.1:18080:8080"
+    restart: unless-stopped

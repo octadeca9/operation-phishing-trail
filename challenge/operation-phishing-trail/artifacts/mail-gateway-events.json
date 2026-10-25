@@ -1,0 +1,44 @@
+{
+  "_note": "Event log SIMULASI dari mail security gateway. Semua data FIKTIF.",
+  "message_id": "PR-8842.20251020@example-payroll.review",
+  "received_at": "2025-10-20T01:14:22Z",
+  "events": [
+    {
+      "ts": "2025-10-20T01:14:19Z",
+      "stage": "connection",
+      "detail": "Inbound SMTP dari 198.51.100.77 (vps-edge.example-payroll.review)"
+    },
+    {
+      "ts": "2025-10-20T01:14:20Z",
+      "stage": "authentication",
+      "spf": "fail",
+      "spf_detail": "198.51.100.77 tidak termasuk dalam SPF record mail-verify.example",
+      "dkim": "none",
+      "dkim_detail": "Tidak ada signature yang aligned dengan header.from",
+      "dmarc": "fail",
+      "dmarc_detail": "policy p=reject untuk nusantara-dynamics-hr.example"
+    },
+    {
+      "ts": "2025-10-20T01:14:21Z",
+      "stage": "url_reputation",
+      "url_defanged": "hxxps://account-verify[.]nusantara-dynamics-hr[.]example-payroll[.]review/secure/login?ref=PR-8842",
+      "registrable_domain": "example-payroll[.]review",
+      "verdict": "suspicious",
+      "detail": "Domain baru terdaftar; menyamarkan nama organisasi sebagai subdomain"
+    },
+    {
+      "ts": "2025-10-20T01:14:21Z",
+      "stage": "attachment_scan",
+      "declared_mime": "application/pdf",
+      "observed_type": "PE32 executable (inert lab sample)",
+      "verdict": "mismatch",
+      "detail": "File signature 4D 5A (MZ) tidak cocok dengan declared PDF"
+    },
+    {
+      "ts": "2025-10-20T01:14:22Z",
+      "stage": "disposition",
+      "action": "quarantine",
+      "detail": "Pesan dikarantina & diteruskan ke helpdesk untuk analisis"
+    }
+  ]
+}

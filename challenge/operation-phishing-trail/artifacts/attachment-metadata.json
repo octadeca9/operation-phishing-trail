@@ -1,0 +1,20 @@
+{
+  "_note": "Metadata statis & FIKTIF untuk latihan. File lampiran bersifat inert; tidak ada payload aktif.",
+  "attachment": {
+    "declared_filename": "Payroll_Statement_October.pdf",
+    "declared_extension": ".pdf",
+    "declared_mime_type": "application/pdf",
+    "content_type_in_email": "application/octet-stream",
+    "size_bytes": 128344,
+    "observed_file_signature_hex": "4D 5A 90 00 03 00 00 00",
+    "observed_file_signature_ascii": "MZ......",
+    "observed_file_type": "PE32 executable (Windows), inert lab sample",
+    "expected_signature_for_pdf_hex": "25 50 44 46 2D",
+    "expected_signature_for_pdf_ascii": "%PDF-",
+    "hashes_synthetic": {
+      "md5": "0f1e2d3c4b5a69788796a5b4c3d2e1f0",
+      "sha256": "a1b2c3d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff00"
+    },
+    "analysis": "Ekstensi dan declared MIME type menyatakan PDF, tetapi file signature yang DIAMATI adalah 'MZ' (4D 5A) — penanda executable Windows (PE), BUKAN '%PDF-'. Declared content type TIDAK sesuai dengan observed content type."
+  }
+}

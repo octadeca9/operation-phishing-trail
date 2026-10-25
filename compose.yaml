@@ -1,0 +1,52 @@
+name: operation-phishing-trail
+
+services:
+  phishing-trail:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    image: operation-phishing-trail:local
+    restart: unless-stopped
+    init: true
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      PORT: "8080"
+      CHALLENGE_DIR: /opt/challenge
+      CHALLENGE_ID: operation-phishing-trail
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      # AUTH_MODE=mock HANYA untuk dev lokal. Jangan dipakai untuk publik.
+      AUTH_MODE: ${AUTH_MODE:-mock}
+      SESSION_TTL_SECONDS: ${SESSION_TTL_SECONDS:-7200}
+      RATE_LIMIT_MAX: ${RATE_LIMIT_MAX:-30}
+      RATE_LIMIT_WINDOW_SECONDS: ${RATE_LIMIT_WINDOW_SECONDS:-60}
+    # Publish HANYA ke loopback host (reverse proxy host → 127.0.0.1:18080).
+    # Hapus 'ports' bila Nginx berjalan di network Docker yang sama.
+    ports:
+      - "127.0.0.1:18080:8080"
+    volumes:
+      - ./challenge:/opt/challenge:ro
+    networks:
+      - lab_internal
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,noexec,nosuid,nodev
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    user: "node"
+    mem_limit: 256m
+    pids_limit: 128
+    healthcheck:
+      test: ["CMD", "node", "dist/healthcheck.js"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+networks:
+  lab_internal:
+    driver: bridge
+    # internal: true  # aktifkan bila aplikasi tidak butuh egress.
+    #   Catatan: jika butuh akses API platform induk, buat jalur egress
+    #   eksplisit & terbatas, jangan membuka internet secara luas.

@@ -1,0 +1,138 @@
+id: operation-phishing-trail
+version: 1
+title: "Operation: Phishing Trail — The Payroll Notice"
+difficulty: easy
+estimated_minutes: 20
+description: >
+  Anda adalah junior security analyst di perusahaan fiktif Nusantara Dynamics.
+  Tim helpdesk meneruskan sebuah email yang mengaku berasal dari bagian HR dan
+  meminta penerima meninjau dokumen penggajian. Periksa artefak yang tersedia,
+  identifikasi indikator phishing yang didukung bukti, lalu susun kesimpulan dan
+  tindakan respons yang tepat. Semua organisasi, nama, domain, IP, URL, dan data
+  bersifat fiktif khusus lab.
+
+# Catatan keamanan: manifest ini AMAN untuk dikirim ke browser.
+# Tidak boleh memuat expected_answer, flag, atau rubric rahasia.
+# Jawaban benar & hint disimpan server-side di private/answers.yaml.
+
+artifacts:
+  - id: message
+    path: artifacts/message.eml
+    title: "message.eml"
+    display_mode: plain_text
+  - id: header-analysis
+    path: artifacts/header-analysis.txt
+    title: "header-analysis.txt"
+    display_mode: plain_text
+  - id: url-evidence
+    path: artifacts/url-evidence.txt
+    title: "url-evidence.txt"
+    display_mode: plain_text
+  - id: attachment-metadata
+    path: artifacts/attachment-metadata.json
+    title: "attachment-metadata.json"
+    display_mode: structured_json
+  - id: mail-gateway-events
+    path: artifacts/mail-gateway-events.json
+    title: "mail-gateway-events.json"
+    display_mode: structured_json
+  - id: case-notes
+    path: artifacts/case-notes.md
+    title: "case-notes.md"
+    display_mode: plain_text
+
+hints:
+  max_level: 3
+
+scoring:
+  max_score: 800
+  # Penalti per hint yang dibuka, dikurangkan dari poin checkpoint terkait.
+  # Poin checkpoint tidak pernah turun di bawah 0.
+  hint_penalty_per_level: 25
+
+objectives:
+  - id: C1
+    type: structured
+    points: 100
+    title: "Identitas pengirim"
+    prompt: >
+      Tentukan alamat pengirim yang DITAMPILKAN pada header From, dan domain
+      pengirim yang perlu diperiksa (bagian setelah tanda @).
+    fields:
+      - id: sender_address
+        label: "Alamat pengirim (header From)"
+        placeholder: "contoh: nama@domain.example"
+      - id: sender_domain
+        label: "Domain pengirim yang perlu diperiksa"
+        placeholder: "contoh: domain.example"
+
+  - id: C2
+    type: exact_match
+    points: 150
+    title: "URL utama (defanged)"
+    prompt: >
+      Salin URL utama pada email, PERSIS dalam bentuk defanged seperti yang
+      tertera pada url-evidence.txt.
+    field:
+      id: url
+      label: "URL utama (defanged)"
+      placeholder: "hxxps://..."
+
+  - id: C3
+    type: multi_select
+    points: 200
+    title: "Red flag yang didukung bukti"
+    prompt: >
+      Pilih SEMUA red flag email/URL yang benar-benar didukung oleh bukti pada
+      artefak. Memilih opsi yang tidak didukung bukti akan membuat jawaban salah.
+    options:
+      - id: display_name_mismatch
+        label: "Display name tidak cocok dengan alamat pengirim sebenarnya"
+      - id: sender_domain_mismatch
+        label: "Domain pengirim berbeda dari domain organisasi yang diklaim"
+      - id: reply_to_mismatch
+        label: "Reply-To mengarah ke domain lain dari pengirim/organisasi"
+      - id: url_lookalike_domain
+        label: "URL memakai domain/subdomain menyesatkan (lookalike)"
+      - id: auth_spf_dmarc_fail
+        label: "Hasil autentikasi email (SPF/DKIM/DMARC) gagal / tidak selaras"
+      - id: urgency_pressure
+        label: "Ada urgensi/ancaman kehilangan akses untuk menekan penerima"
+      - id: uses_https_safe
+        label: "URL memakai HTTPS sehingga pasti aman"
+      - id: dkim_valid
+        label: "DKIM tervalidasi dan selaras dengan domain organisasi"
+      - id: internal_ip_trusted
+        label: "Email berasal dari IP internal tepercaya"
+
+  - id: C4
+    type: single_select
+    points: 150
+    title: "Kesesuaian tipe konten lampiran"
+    prompt: >
+      Bandingkan declared content type lampiran dengan observed file signature
+      pada attachment-metadata.json. Mana kesimpulan yang tepat?
+    options:
+      - id: match
+        label: "Sesuai: declared type cocok dengan file signature yang diamati"
+      - id: mismatch_executable
+        label: "Tidak sesuai: declared PDF, tetapi signature menunjukkan executable (MZ/PE)"
+      - id: mismatch_archive
+        label: "Tidak sesuai: declared PDF, tetapi signature menunjukkan arsip ZIP"
+
+  - id: C5
+    type: single_select
+    points: 200
+    title: "Klasifikasi & tindakan respons"
+    prompt: >
+      Berdasarkan seluruh bukti, pilih klasifikasi dan tindakan respons yang
+      paling tepat.
+    options:
+      - id: phishing_escalate
+        label: "Phishing — jangan klik/jangan buka lampiran, laporkan & eskalasi ke SOC, blokir pengirim"
+      - id: legitimate_pay
+        label: "Email sah dari HR — tinjau dokumen penggajian seperti diminta"
+      - id: spam_ignore
+        label: "Sekadar spam — tandai spam dan abaikan tanpa tindakan lanjutan"
+      - id: phishing_then_click
+        label: "Mungkin phishing — klik tautan dulu untuk memastikan sebelum melapor"

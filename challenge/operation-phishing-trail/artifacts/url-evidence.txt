@@ -1,0 +1,25 @@
+=============================================================================
+BUKTI URL (DEFANGED) — message.eml
+Semua URL telah di-DEFANG agar tidak dapat diklik. Domain bersifat FIKTIF.
+Format defang: "hxxps://" menggantikan "https://" dan "[.]" menggantikan ".".
+=============================================================================
+
+URL UTAMA (target tombol/tautan "verifikasi"):
+
+    hxxps://account-verify[.]nusantara-dynamics-hr[.]example-payroll[.]review/secure/login?ref=PR-8842
+
+Pembongkaran struktur domain (dibaca dari kanan):
+    TLD / registrable       : example-payroll[.]review
+    subdomain level-3        : nusantara-dynamics-hr
+    subdomain level-4        : account-verify
+    path                     : /secure/login
+    query                    : ?ref=PR-8842
+
+Analisis:
+- Nama "nusantara-dynamics-hr" DILETAKKAN sebagai SUBDOMAIN dari domain yang
+  benar-benar dikuasai penyerang: "example-payroll[.]review".
+- Teknik ini membuat URL sekilas tampak milik organisasi, padahal domain
+  terdaftar yang sesungguhnya adalah "example-payroll[.]review".
+- HTTPS pada URL TIDAK menjamin keabsahan pengirim atau organisasi.
+
+Tidak ada tautan lain yang relevan pada email ini.
