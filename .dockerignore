@@ -1,0 +1,23 @@
+# Build context = root repo (untuk Dockerfile root / PaaS).
+.git
+node_modules
+app/node_modules
+dist
+app/dist
+coverage
+*.log
+
+# Dokumen & file yang tak perlu masuk image
+README.md
+ARCHITECTURE.md
+DEPLOYMENT_RUNBOOK.md
+CHALLENGE_AUTHORING_GUIDE.md
+DEPLOY_NGELINX.md
+PRD_Operation_Phishing_Trail.md
+BLUEPRINT_Operation_Phishing_Trail.md
+WRITEUP.md
+.github
+deploy
+.claude
+.env
+.env.*
